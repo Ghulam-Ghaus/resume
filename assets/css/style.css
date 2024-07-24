@@ -248,6 +248,10 @@ h6 {
   z-index: 1;
 }
 
+.mxc {
+  padding-left: 10%;
+}
+
 #hero .hero-container {
   position: relative;
   z-index: 2;
