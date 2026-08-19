@@ -925,100 +925,97 @@ section {
   color: #fff;
 }
 
-.contact .php-email-form {
+.contact .php-email-form,
+.contact .resend-contact-form {
   width: 100%;
   padding: 30px;
-  background: #fff;
-  box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.12);
+  background: rgba(17, 24, 39, 0.75) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
 }
 
-.contact .php-email-form .form-group {
+.contact .php-email-form .form-group,
+.contact .resend-contact-form .form-group {
   padding-bottom: 8px;
 }
 
-.contact .php-email-form .validate {
-  display: none;
-  color: red;
-  margin: 0 0 15px 0;
-  font-weight: 400;
-  font-size: 13px;
-}
-
-.contact .php-email-form .error-message {
-  display: none;
-  color: #fff;
-  background: #ed3c0d;
-  text-align: left;
-  padding: 15px;
-  font-weight: 600;
-}
-
-.contact .php-email-form .error-message br + br {
-  margin-top: 25px;
-}
-
-.contact .php-email-form .sent-message {
-  display: none;
-  color: #fff;
-  background: #18d26e;
-  text-align: center;
-  padding: 15px;
-  font-weight: 600;
-}
-
-.contact .php-email-form .loading {
-  display: none;
-  background: #fff;
-  text-align: center;
-  padding: 15px;
-}
-
-.contact .php-email-form .loading:before {
-  content: "";
-  display: inline-block;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  margin: 0 10px -6px 0;
-  border: 3px solid #18d26e;
-  border-top-color: #eee;
-  animation: animate-loading 1s linear infinite;
-}
-
-.contact .php-email-form .form-group {
-  margin-bottom: 15px;
-}
-
-.contact .php-email-form label {
-  padding-bottom: 8px;
+.contact .php-email-form label,
+.contact .resend-contact-form label {
+  padding-bottom: 6px;
+  color: #cbd5e1 !important;
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
 .contact .php-email-form input,
-.contact .php-email-form textarea {
-  border-radius: 0;
-  box-shadow: none;
-  font-size: 14px;
+.contact .php-email-form textarea,
+.contact .resend-contact-form input,
+.contact .resend-contact-form textarea {
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  font-size: 0.95rem;
+  background: rgba(15, 23, 42, 0.85) !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding: 12px 16px !important;
+  transition: all 0.3s ease;
 }
 
-.contact .php-email-form input {
-  height: 44px;
+.contact .php-email-form input:focus,
+.contact .php-email-form textarea:focus,
+.contact .resend-contact-form input:focus,
+.contact .resend-contact-form textarea:focus {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #ffffff !important;
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 18px rgba(0, 242, 254, 0.35) !important;
+  outline: none;
 }
 
-.contact .php-email-form textarea {
-  padding: 10px 15px;
+.contact .php-email-form input::placeholder,
+.contact .php-email-form textarea::placeholder,
+.contact .resend-contact-form input::placeholder,
+.contact .resend-contact-form textarea::placeholder {
+  color: #64748b !important;
 }
 
-.contact .php-email-form button[type="submit"] {
-  background: #149ddd;
-  border: 0;
-  padding: 10px 24px;
-  color: #fff;
-  transition: 0.4s;
-  border-radius: 4px;
+.contact .php-email-form .error-message,
+.contact .resend-contact-form .error-message {
+  display: none;
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 12px;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 500;
+  margin-top: 15px;
 }
 
-.contact .php-email-form button[type="submit"]:hover {
-  background: #37b3ed;
+.contact .php-email-form .sent-message,
+.contact .resend-contact-form .sent-message {
+  display: none;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 12px;
+  text-align: center;
+  padding: 12px 16px;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
+.contact .php-email-form .loading,
+.contact .resend-contact-form .loading {
+  display: none;
+  background: transparent;
+  color: #00f2fe;
+  text-align: center;
+  padding: 10px;
+  font-weight: 500;
 }
 
 @keyframes animate-loading {
@@ -1149,3 +1146,373 @@ section {
     padding-right: 20px 15px;
   }
 }
+
+/* ==========================================================================
+   3D ANIMATED PROFILE & CYBERPUNK GLASSMORPHISM STYLES
+   ========================================================================== */
+
+/* 3D WebGL Background Canvas */
+#profile-3d-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 50%, #0a0f1d 0%, #030712 100%);
+}
+
+body {
+  background-color: #030712;
+  color: #f3f4f6;
+}
+
+#main, header, section {
+  background: transparent !important;
+}
+
+/* Glassmorphism utility */
+.glass-card {
+  background: rgba(17, 24, 39, 0.65) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 242, 254, 0.4);
+  box-shadow: 0 12px 40px 0 rgba(0, 242, 254, 0.15);
+}
+
+/* Hero 3D Layout */
+#hero {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  padding: 60px 0;
+}
+
+.hero-content-box {
+  z-index: 2;
+}
+
+/* Round-Robin 3D Avatar Card Container */
+.avatar-3d-card-container {
+  perspective: 1000px;
+  width: 290px;
+  height: 380px;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: transform 0.1s ease-out;
+  position: relative;
+}
+
+.avatar-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.avatar-card-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.avatar-front,
+.avatar-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 24px;
+  padding: 16px;
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(0, 242, 254, 0.4);
+  box-shadow: 0 15px 35px rgba(0, 242, 254, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.avatar-back {
+  transform: rotateY(180deg);
+  border-color: rgba(127, 0, 255, 0.6);
+  box-shadow: 0 15px 35px rgba(127, 0, 255, 0.25);
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.avatar-img-frame {
+  position: relative;
+  width: 100%;
+  height: 80%;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.avatar-img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Cyber Avatar SVG Graphic */
+.cyber-avatar-graphic {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #1e1b4b 0%, #090d16 100%);
+}
+
+.cyber-avatar-graphic svg {
+  filter: drop-shadow(0 0 12px #7f00ff);
+  animation: pulseGlow 3s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% { filter: drop-shadow(0 0 8px #00f2fe); }
+  100% { filter: drop-shadow(0 0 20px #7f00ff); }
+}
+
+.avatar-footer-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 8px;
+}
+
+.avatar-badge {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(0, 242, 254, 0.15);
+  color: #00f2fe;
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.flip-btn-icon {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.flip-btn-icon:hover {
+  background: #00f2fe;
+  color: #030712;
+  transform: rotate(180deg);
+}
+
+/* Glow Typography & Badges */
+.text-cyan-glow {
+  color: #00f2fe;
+  text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+}
+
+.badge-tech {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.badge-tech:hover {
+  background: rgba(0, 242, 254, 0.15);
+  border-color: #00f2fe;
+  color: #00f2fe;
+  transform: translateY(-2px);
+}
+
+.badge-highlight {
+  background: rgba(127, 0, 255, 0.2) !important;
+  border-color: rgba(127, 0, 255, 0.5) !important;
+  color: #c084fc !important;
+}
+
+/* Timeline Custom Styling */
+.experience-timeline {
+  position: relative;
+  padding-left: 20px;
+  border-left: 2px solid rgba(0, 242, 254, 0.3);
+}
+
+.timeline-node {
+  position: relative;
+  margin-bottom: 30px;
+  padding-left: 20px;
+}
+
+.timeline-node::before {
+  content: "";
+  position: absolute;
+  left: -29px;
+  top: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #030712;
+  border: 3px solid #00f2fe;
+  box-shadow: 0 0 10px #00f2fe;
+}
+
+.timeline-node.featured::before {
+  border-color: #a855f7;
+  box-shadow: 0 0 15px #a855f7;
+}
+
+/* Contact Button Custom */
+.btn-cyber {
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  color: #030712;
+  font-weight: 700;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-cyber:hover {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: #030712;
+  box-shadow: 0 6px 25px rgba(0, 242, 254, 0.7);
+  transform: translateY(-2px);
+}
+
+.btn-outline-cyber {
+  background: transparent;
+  color: #00f2fe;
+  border: 2px solid #00f2fe;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-cyber:hover {
+  background: rgba(0, 242, 254, 0.15);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+}
+
+.avatar-img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 10%;
+}
+
+/* --------------------------------------------------------------
+   SIDEBAR (#HEADER) GLASSMORPHISM & HERO ALIGNMENT FIX
+   -------------------------------------------------------------- */
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  background: #090d16 !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(0, 242, 254, 0.2);
+  box-shadow: 5px 0 30px rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+}
+
+@media (min-width: 1200px) {
+  #hero, #main {
+    margin-left: 280px !important;
+    width: calc(100% - 280px) !important;
+    max-width: calc(100% - 280px) !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  #header {
+    left: -280px;
+  }
+
+  .mobile-nav-active #header {
+    left: 0;
+  }
+
+  #hero, #main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+#header .profile img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 10%;
+  border: 3px solid #00f2fe !important;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+  transition: transform 0.3s ease;
+}
+
+#header .profile img:hover {
+  transform: scale(1.05);
+}
+
+.nav-menu a, .nav-menu a:focus {
+  border-radius: 12px;
+  margin-bottom: 6px;
+  color: #94a3b8;
+  padding: 10px 16px;
+}
+
+.nav-menu a:hover,
+.nav-menu .active,
+.nav-menu .active:focus,
+.nav-menu li:hover > a {
+  background: rgba(0, 242, 254, 0.12) !important;
+  color: #00f2fe !important;
+  border-left: 3px solid #00f2fe;
+}
+
+.nav-menu a:hover i,
+.nav-menu .active i,
+.nav-menu .active:focus i,
+.nav-menu li:hover > a i {
+  color: #00f2fe !important;
+}
+
+.mobile-nav-toggle {
+  background-color: #00f2fe;
+  color: #030712;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+}
+
+
+
