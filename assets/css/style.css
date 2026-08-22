@@ -1514,5 +1514,196 @@ body {
   box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
 }
 
+/*--------------------------------------------------------------
+# HIRE ME BUTTONS & VOICE AI AVATAR UI
+--------------------------------------------------------------*/
+.btn-hire-fiverr {
+  background: rgba(29, 191, 115, 0.15);
+  color: #1ed760;
+  border: 1px solid #1dbf73;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.btn-hire-fiverr:hover {
+  background: #1dbf73;
+  color: #090d16;
+  box-shadow: 0 0 20px rgba(29, 191, 115, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-hire-linkedin {
+  background: rgba(10, 102, 194, 0.15);
+  color: #38bdf8;
+  border: 1px solid #0a66c2;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.btn-hire-linkedin:hover {
+  background: #0a66c2;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(10, 102, 194, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-hire-upwork {
+  background: rgba(20, 168, 0, 0.15);
+  color: #34d399;
+  border: 1px solid #14a800;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.btn-hire-upwork:hover {
+  background: #14a800;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(20, 168, 0, 0.6);
+  transform: translateY(-2px);
+}
+
+/* 3D Voice Avatar Component */
+.voice-avatar-frame {
+  position: relative;
+  border-radius: 24px;
+  padding: 8px;
+  background: linear-gradient(135deg, rgba(127, 0, 255, 0.6), rgba(0, 242, 254, 0.6));
+  box-shadow: 0 10px 40px rgba(127, 0, 255, 0.35);
+  overflow: hidden;
+  transition: transform 0.4s ease;
+}
+.voice-avatar-frame:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+.voice-avatar-img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 18px;
+}
+
+/* Voice Visualizer Wave Bars */
+.voice-visualizer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 30px;
+}
+.voice-wave-bar {
+  width: 4px;
+  height: 8px;
+  background: #00f2fe;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.voice-visualizer.active-listening .voice-wave-bar {
+  background: #00f2fe;
+  animation: wavePulse 0.8s infinite ease-in-out alternate;
+}
+.voice-visualizer.active-speaking .voice-wave-bar {
+  background: #c084fc;
+  animation: wavePulse 0.5s infinite ease-in-out alternate;
+}
+.voice-wave-bar:nth-child(1) { animation-delay: 0.1s; }
+.voice-wave-bar:nth-child(2) { animation-delay: 0.2s; }
+.voice-wave-bar:nth-child(3) { animation-delay: 0.3s; }
+.voice-wave-bar:nth-child(4) { animation-delay: 0.4s; }
+.voice-wave-bar:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes wavePulse {
+  0% { height: 6px; }
+  100% { height: 28px; }
+}
+
+/* Voice Mic Pulse Button */
+.btn-voice-mic {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7f00ff, #00f2fe);
+  border: none;
+  color: #fff;
+  font-size: 1.4rem;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-voice-mic.active-mic {
+  background: linear-gradient(135deg, #ff007f, #ff5252);
+  animation: micGlow 1.2s infinite alternate;
+}
+@keyframes micGlow {
+  0% { box-shadow: 0 0 15px rgba(255, 0, 127, 0.6); }
+  100% { box-shadow: 0 0 35px rgba(255, 0, 127, 0.95); transform: scale(1.08); }
+}
+
+.voice-prompt-chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  color: #e2e8f0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.voice-prompt-chip:hover {
+  background: rgba(0, 242, 254, 0.2);
+  border-color: #00f2fe;
+  color: #fff;
+}
+
+/* Drawer / Chat Overlay */
+.voice-assistant-drawer {
+  position: fixed;
+  bottom: -600px;
+  right: 25px;
+  width: 380px;
+  height: 520px;
+  background: rgba(13, 17, 28, 0.95);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  transition: bottom 0.4s ease;
+  overflow: hidden;
+}
+.voice-assistant-drawer.active {
+  bottom: 25px;
+}
+@media (max-width: 576px) {
+  .voice-assistant-drawer {
+    width: 92%;
+    right: 4%;
+  }
+}
+
 
 

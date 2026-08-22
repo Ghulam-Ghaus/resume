@@ -44,9 +44,9 @@
   <header id="header">
     <div class="d-flex flex-column">
       <div class="profile text-center">
-        <img src="assets/img/profile-img.jpg" alt="Ghulam Ghaus"
+        <img src="assets/img/voice-avatar.jpg" alt="Ghulam Ghaus 3D Avatar"
           class="img-fluid rounded-circle border border-info shadow-lg mb-3"
-          style="width: 120px; height: 120px; object-fit: cover;" />
+          style="width: 120px; height: 120px; object-fit: cover; object-position: top center;" />
         <h1 class="text-light fs-4"><a href="index.html">Ghulam Ghaus</a></h1>
         <p class="text-info small mb-3">Software & AI Engineer</p>
 
@@ -106,47 +106,81 @@
               Touch</a>
           </div>
 
+          <!-- Hire Me Platforms -->
+          <div class="pt-2 mb-4">
+            <div class="text-secondary small fw-bold text-uppercase tracking-wider mb-2">
+              <i class="bi bi-briefcase-fill text-cyan-glow me-1"></i> Hire Me On Platforms:
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+              <a href="https://www.fiverr.com/ghulamghaus266" target="_blank" rel="noopener noreferrer" class="btn-hire-fiverr">
+                <i class="bi bi-patch-check-fill"></i> Fiverr Profile
+              </a>
+              <a href="https://www.linkedin.com/in/ghulam-ghaus-5b4ba9194/" target="_blank" rel="noopener noreferrer" class="btn-hire-linkedin">
+                <i class="bi bi-linkedin"></i> LinkedIn Profile
+              </a>
+              <a href="https://www.upwork.com/freelancers/~018e9f6013ee023bf0?viewMode=1" target="_blank" rel="noopener noreferrer" class="btn-hire-upwork">
+                <i class="bi bi-check-circle-fill"></i> Upwork Profile
+              </a>
+            </div>
+          </div>
+
           <!-- Quick Contact Badges -->
-          <div class="d-flex flex-wrap gap-3 pt-2">
+          <div class="d-flex flex-wrap gap-3 pt-1">
             <span class="badge-tech"><i class="bi bi-envelope-fill text-info"></i> ghulamghaus266@gmail.com</span>
             <span class="badge-tech"><i class="bi bi-telephone-fill text-success"></i> +92 306 7956164</span>
             <span class="badge-tech"><i class="bi bi-geo-alt-fill text-danger"></i> Faisalabad, Pakistan</span>
           </div>
         </div>
 
-        <!-- Right Column: Interactive 3D Round-Robin Avatar Card -->
+        <!-- Right Column: Interactive 3D Voice Avatar Card -->
         <div class="col-lg-5 text-center">
-          <div class="avatar-3d-card-container">
-            <div class="avatar-card-inner">
-
-              <!-- Side A: Original Real Photo -->
-              <div class="avatar-front">
-                <div class="avatar-img-frame">
-                  <img src="assets/img/profile-photo.jpg" alt="Ghulam Ghaus Real Photo" />
+          <div class="voice-avatar-frame text-center p-3">
+            
+            <!-- Avatar Image Header with Glow Badge -->
+            <div class="position-relative overflow-hidden rounded-4 mb-3">
+              <img src="assets/img/voice-avatar.jpg" id="voice-avatar-img-element" alt="Ghulam Ghaus 3D Animated Voice Avatar" class="voice-avatar-img img-fluid" />
+              <div class="position-absolute top-0 start-0 m-3">
+                <span class="badge bg-dark bg-opacity-75 text-cyan-glow border border-info px-3 py-2 rounded-pill">
+                  <i class="bi bi-cpu-fill me-1"></i> 3D AI Voice Avatar
+                </span>
+              </div>
+              <div class="position-absolute bottom-0 start-0 end-0 p-3 bg-dark bg-opacity-75 text-start d-flex align-items-center justify-content-between">
+                <div>
+                  <h6 class="text-white mb-0 fw-bold">Ghulam Ghaus AI</h6>
+                  <span id="voice-assistant-status" class="voice-status text-secondary">Click Mic to talk</span>
                 </div>
-                <div class="avatar-footer-info">
-                  <span class="avatar-badge"><i class="bi bi-camera-fill me-1"></i> Original Photo</span>
-                  <button id="flip-avatar-btn" class="flip-btn-icon" title="Flip to 3D AI Cyber Avatar"><i
-                      class="bi bi-arrow-repeat"></i></button>
+                <!-- Audio Wave Visualizer -->
+                <div id="voice-visualizer" class="voice-visualizer">
+                  <div class="voice-wave-bar"></div>
+                  <div class="voice-wave-bar"></div>
+                  <div class="voice-wave-bar"></div>
+                  <div class="voice-wave-bar"></div>
+                  <div class="voice-wave-bar"></div>
                 </div>
               </div>
-
-              <!-- Side B: 3D Animated Cartoon Avatar (Snapchat / Facebook Style) -->
-              <div class="avatar-back">
-                <div class="avatar-img-frame">
-                  <img src="assets/img/cyber-avatar.jpg" alt="Ghulam Ghaus 3D Animated Avatar" />
-                </div>
-                <div class="avatar-footer-info">
-                  <span class="avatar-badge text-purple" style="color: #c084fc; border-color: #7f00ff;"><i
-                      class="bi bi-person-bounding-box me-1"></i> 3D Animated Avatar</span>
-                  <span class="small text-cyan-glow"><i class="bi bi-arrow-repeat me-1"></i> Click to flip</span>
-                </div>
-              </div>
-
             </div>
+
+            <!-- Voice Controls & Quick Prompts -->
+            <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+              <button id="voice-assistant-mic-btn" class="btn-voice-mic" title="Start / Stop Listening">
+                <i class="bi bi-mic-fill"></i>
+              </button>
+              <button id="open-voice-drawer-btn" class="btn btn-outline-cyber rounded-pill px-3" title="Open AI Chat Drawer">
+                <i class="bi bi-chat-text-fill me-1"></i>Ask AI
+              </button>
+              <button id="calendar-trigger-btn" class="btn btn-cyber rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#calendar-booking-modal" title="Book a Meeting">
+                <i class="bi bi-calendar-event-fill me-1"></i>Book Meeting
+              </button>
+            </div>
+
+            <!-- Quick Suggestion Chips -->
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+              <span class="voice-prompt-chip" data-prompt="Tell me about Ghulam Ghaus's skills and backend experience"><i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Skills</span>
+              <span class="voice-prompt-chip" data-prompt="What low latency Voice AI projects has he built?"><i class="bi bi-mic-fill me-1 text-info"></i>Voice AI</span>
+              <span class="voice-prompt-chip" data-prompt="I want to book a meeting on calendar"><i class="bi bi-calendar-check-fill me-1 text-success"></i>Calendar Booking</span>
+            </div>
+
           </div>
-          <p class="small text-secondary mt-3"><i class="bi bi-mouse me-1"></i> Move mouse to tilt in 3D • Flips every
-            5s or on click</p>
         </div>
 
       </div>
@@ -753,8 +787,96 @@
   <!-- 3D Profile & Round-Robin Avatar Script -->
   <script src="assets/js/3d-profile.js"></script>
 
+  <!-- Floating Voice Assistant Chat Drawer -->
+  <div id="voice-assistant-drawer" class="voice-assistant-drawer">
+    <div class="p-3 bg-dark border-bottom border-info d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-2">
+        <div class="btn-voice-mic active-mic" style="width: 36px; height: 36px; font-size: 1rem;">
+          <i class="bi bi-robot"></i>
+        </div>
+        <div>
+          <h6 class="text-white mb-0 fw-bold">Ghulam Ghaus AI Assistant</h6>
+          <small class="text-cyan-glow">Gemini 1.5 Flash Voice Engine</small>
+        </div>
+      </div>
+      <button id="close-voice-drawer" class="btn-close btn-close-white"></button>
+    </div>
+    
+    <div id="voice-transcript-log" class="p-3 flex-grow-1 overflow-y-auto" style="max-height: 320px;">
+      <div class="chat-message assistant-message p-3 rounded-3 mb-3">
+        <div class="d-flex align-items-center mb-1">
+          <i class="bi bi-robot text-cyan-glow me-2"></i>
+          <strong class="text-cyan-glow">Ghulam Ghaus AI</strong>
+        </div>
+        <div>Hello! I am Ghulam Ghaus's AI Voice Assistant. Ask me anything about his Voice AI projects, backend microservices, skills, or click "Book Meeting" to schedule a call directly on his calendar!</div>
+      </div>
+    </div>
+
+    <!-- Quick Prompt Suggestion Chips -->
+    <div class="px-3 py-2 border-top border-secondary bg-dark bg-opacity-50 d-flex gap-1 overflow-x-auto" style="white-space: nowrap;">
+      <span class="voice-prompt-chip py-1 px-2" style="font-size: 0.75rem;" data-prompt="What projects has Ghulam Ghaus built?">🚀 Projects</span>
+      <span class="voice-prompt-chip py-1 px-2" style="font-size: 0.75rem;" data-prompt="What are his core technical skills?">⚡ Skills</span>
+      <span class="voice-prompt-chip py-1 px-2" style="font-size: 0.75rem;" data-prompt="Book a calendar meeting">📅 Book Meeting</span>
+    </div>
+
+    <!-- Interactive Chat Input Form Footer -->
+    <div class="p-2 bg-dark border-top border-secondary">
+      <form id="voice-chat-input-form" class="d-flex align-items-center gap-2">
+        <button type="button" id="drawer-mic-btn" class="btn btn-sm btn-outline-info rounded-circle d-flex align-items-center justify-content-center" title="Mic Toggle" style="width: 38px; height: 38px;">
+          <i class="bi bi-mic-fill"></i>
+        </button>
+        <input type="text" id="voice-chat-input" class="form-control form-control-sm bg-secondary bg-opacity-25 text-light border-secondary rounded-pill px-3" placeholder="Type a message or question..." autocomplete="off" />
+        <button type="submit" class="btn btn-sm btn-cyber rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+          <i class="bi bi-send-fill"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Calendar Booking Modal -->
+  <div class="modal fade" id="calendar-booking-modal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark border border-cyan-glow text-light shadow-lg rounded-4">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold text-cyan-glow" id="calendarModalLabel">
+            <i class="bi bi-calendar2-check-fill me-2"></i>Book a Meeting with Ghulam Ghaus
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="calendar-booking-form">
+          <div class="modal-body">
+            <p class="small text-secondary mb-3">Select your preferred date & time. The AI will generate a `.ics` calendar event download and Google Calendar link for your meeting!</p>
+            <div class="mb-3">
+              <label class="form-label text-white">Your Name</label>
+              <input type="text" id="booking-name" class="form-control bg-secondary bg-opacity-25 text-light border-secondary" placeholder="e.g. John Doe" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-white">Your Email</label>
+              <input type="email" id="booking-email" class="form-control bg-secondary bg-opacity-25 text-light border-secondary" placeholder="e.g. john@example.com" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-white">Date & Time</label>
+              <input type="datetime-local" id="booking-datetime" class="form-control bg-secondary bg-opacity-25 text-light border-secondary" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-white">Topic / Project Discussion</label>
+              <textarea id="booking-topic" class="form-control bg-secondary bg-opacity-25 text-light border-secondary" rows="2" placeholder="e.g. Full-Stack / Voice AI Integration Project"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-cyber rounded-pill px-4"><i class="bi bi-calendar-plus me-1"></i>Confirm & Book</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Resend API Contact Script -->
   <script src="assets/js/contact-resend.js"></script>
+
+  <!-- AI Voice Assistant & Calendar Engine -->
+  <script src="assets/js/voice-assistant.js"></script>
 </body>
 
 </html>
