@@ -68,12 +68,17 @@
    * Scrolls to an element with header offset
    */
   const scrollto = (el) => {
-    let elementPos = select(el).offsetTop;
+    let target = select(el);
+    if (!target) return;
+    let header = select("#header");
+    let offset = header ? header.offsetHeight : 0;
+    let elementPos = target.offsetTop - offset;
     window.scrollTo({
       top: elementPos,
       behavior: "smooth",
     });
   };
+
 
   /**
    * Back to top button
@@ -236,26 +241,30 @@
   /**
    * Initiate portfolio lightbox
    */
-  const portfolioLightbox = GLightbox({
-    selector: ".portfolio-lightbox",
-  });
+  if (typeof GLightbox !== "undefined") {
+    const portfolioLightbox = GLightbox({
+      selector: ".portfolio-lightbox",
+    });
+  }
 
   /**
    * Portfolio details slider
    */
-  new Swiper(".portfolio-details-slider", {
-    speed: 400,
-    loop: true,
-    autoplay: {
-      delay: 5000,
-      disableOnInteraction: false,
-    },
-    pagination: {
-      el: ".swiper-pagination",
-      type: "bullets",
-      clickable: true,
-    },
-  });
+  if (typeof Swiper !== "undefined") {
+    new Swiper(".portfolio-details-slider", {
+      speed: 400,
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        type: "bullets",
+        clickable: true,
+      },
+    });
+  }
 
   /**
    * Testimonials slider

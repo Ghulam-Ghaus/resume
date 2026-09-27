@@ -169,12 +169,23 @@ class VoiceAssistantEngine {
     }
 
     if (this.toggleDrawerBtn) {
-      this.toggleDrawerBtn.addEventListener("click", () => this.openDrawer());
+      this.toggleDrawerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (this.drawer && this.drawer.classList.contains("active")) {
+          this.closeDrawer();
+        } else {
+          this.openDrawer();
+        }
+      });
     }
 
     if (this.closeDrawerBtn) {
-      this.closeDrawerBtn.addEventListener("click", () => this.closeDrawer());
+      this.closeDrawerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.closeDrawer();
+      });
     }
+
 
     if (this.quickPrompts) {
       this.quickPrompts.forEach(chip => {
@@ -290,10 +301,15 @@ class VoiceAssistantEngine {
     }
 
     try {
+      if (!GEMINI_API_KEY || GEMINI_API_KEY === "[ENCRYPTION_KEY]") {
+        const fallbackResponse = this.generateOfflineFallback(userText);
+        this.processAIResponse(fallbackResponse);
+        return;
+      }
       const aiResponse = await this.queryGeminiAPI(userText);
       this.processAIResponse(aiResponse);
     } catch (error) {
-      console.error("Gemini API call error:", error);
+      console.warn("Gemini API call fallback:", error);
       const fallbackResponse = this.generateOfflineFallback(userText);
       this.processAIResponse(fallbackResponse);
     }
