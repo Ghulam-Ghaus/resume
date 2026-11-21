@@ -1,120 +1,55 @@
 /**
- * Ghulam Ghaus Portfolio - AI Voice Assistant & Calendar Engine
- * Powered by Gemini 1.5 Flash API + Browser Web Speech AI
+ * Ghulam Ghaus Portfolio — Grounded Recruiter Q&A & Optional Voice Assistant
+ * 100% Synced to Verified CV, JobAgent AI & 15+ Shipped Projects
  */
+(function () {
+  "use strict";
 
-const GEMINI_API_KEY = "[ENCRYPTION_KEY]";
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+  const PORTFOLIO_KNOWLEDGE = {
+    name: "Ghulam Ghaus",
+    role: "Software Engineer — Backend, Full-Stack & Real-Time AI Systems",
+    email: "ghulamghaus266@gmail.com",
+    whatsapp: "+92 306 7956164",
+    github: "https://github.com/Ghulam-Ghaus",
+    linkedin: "https://www.linkedin.com/in/ghulam-ghaus-5b4ba9194/",
+    experienceYears: "4+ years",
+    shippedCount: "15+ production systems (web, desktop, mobile, SaaS & AI)",
+    education: "BS Information Technology (CGPA 3.28 / 4.00) from Government College University Faisalabad (2015–2019), plus Certificate in Block Chain Programming (Grade A) from NAVTTC / Air University, Islamabad (2022)."
+  };
 
-// Portfolio Knowledge Base for Ghulam Ghaus
-const PORTFOLIO_KNOWLEDGE = {
-  name: "Ghulam Ghaus",
-  role: "Software Engineer & Voice AI Integrations Specialist",
-  email: "ghulamghaus266@gmail.com",
-  phone: "+92 306 7956164",
-  location: "Faisalabad, Pakistan",
-  website: "https://ggitsols.com",
-  github: "https://github.com/Ghulam-Ghaus",
-  linkedin: "https://www.linkedin.com/in/ghulam-ghaus-5b4ba9194/",
-  upwork: "https://www.upwork.com/freelancers/~018e9f6013ee023bf0?viewMode=1",
-  fiverr: "https://www.fiverr.com/ghulamghaus266",
-  summary: "Backend-Focused Full-Stack Engineer specializing in low-latency Voice AI systems, Twilio Media Streams, WebSockets, STT/TTS pipelines, Node.js, NestJS, TypeScript, Python, FastAPI, and Microservices.",
-  skills: [
-    "Node.js", "TypeScript", "NestJS", "Python", "FastAPI", "Express.js",
-    "Voice AI", "Twilio Media Streams", "WebSockets", "Deepgram STT/TTS",
-    "PostgreSQL", "MongoDB", "Redis", "Docker", "AWS", "Firebase",
-    "Microservices", "REST APIs", "GraphQL", "JWT / RBAC Security"
-  ],
-  services: [
-    "Low-Latency Voice AI & Telephony Automation (Twilio, Deepgram, Gemini)",
-    "Backend Microservices Development (Node.js, NestJS, FastAPI)",
-    "Full-Stack SaaS Application Engineering (React, Next.js, TypeScript)",
-    "API Design, Security, & Real-Time WebSocket Infrastructure",
-    "Database Architecture & Cloud Deployment (Docker, AWS, Firebase)"
-  ],
-  projects: [
-    {
-      name: "Voice Intake Telephony System",
-      desc: "Low-latency Voice AI intake system integrating Twilio Media Streams, Deepgram STT, Gemini Flash, and webhooks."
-    },
-    {
-      name: "Real-Time AI Agent Engine",
-      desc: "Streaming voice and text agent platform with dynamic state machine, function calling, and live socket connection."
-    },
-    {
-      name: "Enterprise Microservices Suite",
-      desc: "Distributed backend architecture with NestJS, Redis caching, PostgreSQL, and RBAC authentication."
-    },
-    {
-      name: "Asset Management System",
-      desc: "Scalable file and media processing microservice using Multer library and Node.js file system APIs."
+  class GroundedAssistantEngine {
+    constructor() {
+      this.isListening = false;
+      this.audioEnabled = false;
+      this.recognition = null;
+      this.synthesis = window.speechSynthesis || null;
+
+      this.initElements();
+      this.initSpeechRecognition();
+      this.bindEvents();
     }
-  ],
-  education: [
-    "Bachelor of Science in Computer Science (BSCS) - National Textile University (NTU), Faisalabad (2020 - 2024)"
-  ]
-};
 
-// System Prompt for Gemini AI
-const GEMINI_SYSTEM_PROMPT = `
-You are "Ghulam Ghaus AI", the interactive 3D Voice Assistant for Ghulam Ghaus's official portfolio website.
-Your objective is to assist recruiters, clients, and visitors.
-You speak clearly, professionally, and concisely (1-3 sentences max per response, suitable for text-to-speech audio).
+    initElements() {
+      this.micBtn = document.getElementById("voice-assistant-mic-btn");
+      this.drawerMicBtn = document.getElementById("drawer-mic-btn");
+      this.ttsToggleBtn = document.getElementById("voice-tts-toggle");
+      this.statusText = document.getElementById("voice-assistant-status");
+      this.visualizer = document.getElementById("voice-visualizer");
+      this.drawer = document.getElementById("voice-assistant-drawer");
+      this.transcriptContainer = document.getElementById("voice-transcript-log");
+      this.closeDrawerBtn = document.getElementById("close-voice-drawer");
+      this.toggleDrawerBtn = document.getElementById("open-voice-drawer-btn");
+      this.quickPrompts = document.querySelectorAll(".voice-prompt-chip");
+      this.chatForm = document.getElementById("voice-chat-input-form");
+      this.chatInput = document.getElementById("voice-chat-input");
+      this.bookingModal = document.getElementById("calendar-booking-modal");
+      this.bookingForm = document.getElementById("calendar-booking-form");
+    }
 
-Knowledge Base:
-- Name: ${PORTFOLIO_KNOWLEDGE.name}
-- Title: ${PORTFOLIO_KNOWLEDGE.role}
-- Contact Email: ${PORTFOLIO_KNOWLEDGE.email} | Phone: ${PORTFOLIO_KNOWLEDGE.phone} | Location: ${PORTFOLIO_KNOWLEDGE.location}
-- Profiles: LinkedIn (${PORTFOLIO_KNOWLEDGE.linkedin}), Upwork (${PORTFOLIO_KNOWLEDGE.upwork}), Fiverr (${PORTFOLIO_KNOWLEDGE.fiverr}), GitHub (${PORTFOLIO_KNOWLEDGE.github})
-- Key Expertise: ${PORTFOLIO_KNOWLEDGE.summary}
-- Core Skills: ${PORTFOLIO_KNOWLEDGE.skills.join(", ")}
-- Services Provided: ${PORTFOLIO_KNOWLEDGE.services.join("; ")}
-- Major Projects: ${PORTFOLIO_KNOWLEDGE.projects.map(p => p.name + " (" + p.desc + ")").join("; ")}
-- Education: ${PORTFOLIO_KNOWLEDGE.education.join("; ")}
+    initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) return;
 
-Capabilities:
-1. Answer any questions about Ghulam Ghaus's skills, experience, projects, or background.
-2. If the user asks to book a meeting, schedule a call, or hire Ghulam Ghaus, inform them you can open the Calendar booking modal immediately. Include [ACTION:BOOK_MEETING] in your response.
-3. If the user asks to see projects, experience, skills, or contact info, include [ACTION:NAVIGATE_SECTION:#section_name] (e.g. [ACTION:NAVIGATE_SECTION:#portfolio], [ACTION:NAVIGATE_SECTION:#contact], [ACTION:NAVIGATE_SECTION:#skills]).
-4. Keep spoken responses engaging, natural, and helpful.
-`;
-
-class VoiceAssistantEngine {
-  constructor() {
-    this.isListening = false;
-    this.isSpeaking = false;
-    this.recognition = null;
-    this.synthesis = window.speechSynthesis;
-    this.conversationHistory = [];
-
-    this.initElements();
-    this.initSpeechRecognition();
-    this.bindEvents();
-  }
-
-  initElements() {
-    this.micBtn = document.getElementById("voice-assistant-mic-btn");
-    this.statusText = document.getElementById("voice-assistant-status");
-    this.visualizer = document.getElementById("voice-visualizer");
-    this.drawer = document.getElementById("voice-assistant-drawer");
-    this.transcriptContainer = document.getElementById("voice-transcript-log");
-    this.closeDrawerBtn = document.getElementById("close-voice-drawer");
-    this.toggleDrawerBtn = document.getElementById("open-voice-drawer-btn");
-    this.quickPrompts = document.querySelectorAll(".voice-prompt-chip");
-
-    // Chat Form Elements
-    this.chatForm = document.getElementById("voice-chat-input-form");
-    this.chatInput = document.getElementById("voice-chat-input");
-    this.drawerMicBtn = document.getElementById("drawer-mic-btn");
-
-    // Calendar Modal Elements
-    this.bookingModal = document.getElementById("calendar-booking-modal");
-    this.bookingForm = document.getElementById("calendar-booking-form");
-  }
-
-  initSpeechRecognition() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
       this.recognition = new SpeechRecognition();
       this.recognition.continuous = false;
       this.recognition.interimResults = false;
@@ -127,426 +62,352 @@ class VoiceAssistantEngine {
 
       this.recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
-        this.handleUserSpeech(transcript);
+        this.audioEnabled = true;
+        this.syncAudioToggleUI();
+        this.handleQuery(transcript);
       };
 
-      this.recognition.onerror = (event) => {
-        console.warn("Speech recognition error:", event.error);
+      this.recognition.onerror = () => {
         this.isListening = false;
         this.updateUI("idle");
-        this.appendMessage("assistant", "I couldn't quite catch that. Could you try speaking again or click a quick prompt?");
+        this.appendMessage("assistant", "Could not capture audio clearly. Feel free to type your question or tap a prompt chip below.");
       };
 
       this.recognition.onend = () => {
         this.isListening = false;
-        if (!this.isSpeaking) {
-          this.updateUI("idle");
-        }
+        this.updateUI("idle");
       };
-    } else {
-      console.warn("Web SpeechRecognition is not supported in this browser.");
-    }
-  }
-
-  bindEvents() {
-    if (this.micBtn) {
-      this.micBtn.addEventListener("click", () => this.toggleListening());
     }
 
-    if (this.drawerMicBtn) {
-      this.drawerMicBtn.addEventListener("click", () => this.toggleListening());
-    }
+    bindEvents() {
+      if (this.micBtn) {
+        this.micBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          this.openDrawer();
+          this.toggleListening();
+        });
+      }
 
-    if (this.chatForm) {
-      this.chatForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (this.chatInput && this.chatInput.value.trim()) {
-          const text = this.chatInput.value.trim();
-          this.chatInput.value = "";
-          this.handleUserSpeech(text);
-        }
-      });
-    }
+      if (this.drawerMicBtn) {
+        this.drawerMicBtn.addEventListener("click", () => this.toggleListening());
+      }
 
-    if (this.toggleDrawerBtn) {
-      this.toggleDrawerBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (this.drawer && this.drawer.classList.contains("active")) {
+      if (this.ttsToggleBtn) {
+        this.ttsToggleBtn.addEventListener("click", () => {
+          this.audioEnabled = !this.audioEnabled;
+          if (!this.audioEnabled && this.synthesis && this.synthesis.speaking) {
+            this.synthesis.cancel();
+          }
+          this.syncAudioToggleUI();
+        });
+      }
+
+      if (this.chatForm) {
+        this.chatForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          if (this.chatInput && this.chatInput.value.trim()) {
+            const text = this.chatInput.value.trim();
+            this.chatInput.value = "";
+            this.handleQuery(text);
+          }
+        });
+      }
+
+      if (this.toggleDrawerBtn) {
+        this.toggleDrawerBtn.addEventListener("click", () => {
+          if (this.drawer && this.drawer.classList.contains("active")) {
+            this.closeDrawer();
+          } else {
+            this.openDrawer();
+          }
+        });
+      }
+
+      if (this.closeDrawerBtn) {
+        this.closeDrawerBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
           this.closeDrawer();
-        } else {
-          this.openDrawer();
-        }
-      });
-    }
+        });
+      }
 
-    if (this.closeDrawerBtn) {
-      this.closeDrawerBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        this.closeDrawer();
-      });
-    }
-
-
-    if (this.quickPrompts) {
-      this.quickPrompts.forEach(chip => {
+      this.quickPrompts.forEach((chip) => {
         chip.addEventListener("click", () => {
-          const prompt = chip.getAttribute("data-prompt") || chip.innerText.trim();
+          const prompt = chip.getAttribute("data-prompt") || chip.textContent.trim();
           this.openDrawer();
-          this.handleUserSpeech(prompt);
+          this.handleQuery(prompt);
         });
       });
-    }
 
-    if (this.bookingForm) {
-      this.bookingForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        this.processCalendarBooking();
-      });
-    }
-  }
-
-  toggleListening() {
-    if (this.isListening) {
-      this.stopListening();
-    } else {
-      this.startListening();
-    }
-  }
-
-  startListening() {
-    if (this.synthesis && this.synthesis.speaking) {
-      this.synthesis.cancel();
-    }
-    if (this.recognition) {
-      try {
-        this.recognition.start();
-      } catch (err) {
-        console.warn("Recognition start error:", err);
+      if (this.bookingForm) {
+        this.bookingForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          this.processCalendarBooking();
+        });
       }
-    } else {
-      alert("Voice speech recognition is not supported by your browser. You can type in the chat!");
-      this.openDrawer();
     }
-  }
 
-  stopListening() {
-    if (this.recognition) {
-      this.recognition.stop();
+    syncAudioToggleUI() {
+      if (!this.ttsToggleBtn) return;
+      this.ttsToggleBtn.innerHTML = this.audioEnabled
+        ? '<i class="bi bi-volume-up me-1"></i><span>Audio: On</span>'
+        : '<i class="bi bi-volume-mute me-1"></i><span>Audio: Off</span>';
     }
-    this.isListening = false;
-    this.updateUI("idle");
-  }
 
-  openDrawer() {
-    if (this.drawer) {
-      this.drawer.classList.add("active");
-    }
-  }
-
-  closeDrawer() {
-    if (this.drawer) {
-      this.drawer.classList.remove("active");
-    }
-  }
-
-  updateUI(state) {
-    if (!this.statusText || !this.visualizer || !this.micBtn) return;
-
-    if (this.drawerMicBtn) {
-      if (state === "listening") {
-        this.drawerMicBtn.className = "btn btn-sm btn-danger rounded-circle d-flex align-items-center justify-content-center active-mic";
+    toggleListening() {
+      if (this.isListening) {
+        this.stopListening();
       } else {
-        this.drawerMicBtn.className = "btn btn-sm btn-outline-info rounded-circle d-flex align-items-center justify-content-center";
+        this.startListening();
       }
     }
 
-    if (state === "listening") {
-      this.statusText.innerText = "Listening... Speak now";
-      this.statusText.className = "voice-status text-cyan-glow fw-bold";
-      this.visualizer.classList.add("active-listening");
-      this.visualizer.classList.remove("active-speaking");
-      this.micBtn.classList.add("active-mic");
-    } else if (state === "speaking") {
-      this.statusText.innerText = "Speaking...";
-      this.statusText.className = "voice-status text-purple-glow fw-bold";
-      this.visualizer.classList.add("active-speaking");
-      this.visualizer.classList.remove("active-listening");
-      this.micBtn.classList.remove("active-mic");
-    } else if (state === "thinking") {
-      this.statusText.innerText = "Thinking...";
-      this.statusText.className = "voice-status text-warning fw-bold";
-      this.visualizer.classList.remove("active-listening", "active-speaking");
-      this.micBtn.classList.remove("active-mic");
-    } else {
-      this.statusText.innerText = "Click Mic or Ask Anything";
-      this.statusText.className = "voice-status text-secondary";
-      this.visualizer.classList.remove("active-listening", "active-speaking");
-      this.micBtn.classList.remove("active-mic");
-    }
-  }
-
-  async handleUserSpeech(userText) {
-    if (!userText || !userText.trim()) return;
-
-    this.appendMessage("user", userText);
-    this.updateUI("thinking");
-
-    // Check for quick calendar command offline fallback
-    if (userText.toLowerCase().includes("book") || userText.toLowerCase().includes("meeting") || userText.toLowerCase().includes("schedule")) {
-      const responseText = "I would be happy to schedule a meeting with Ghulam Ghaus for you! Opening the calendar booking form now.";
-      this.appendMessage("assistant", responseText);
-      this.speakText(responseText);
-      this.openBookingModal();
-      return;
-    }
-
-    try {
-      if (!GEMINI_API_KEY || GEMINI_API_KEY === "[ENCRYPTION_KEY]") {
-        const fallbackResponse = this.generateOfflineFallback(userText);
-        this.processAIResponse(fallbackResponse);
+    startListening() {
+      if (this.synthesis && this.synthesis.speaking) {
+        this.synthesis.cancel();
+      }
+      if (!this.recognition) {
+        this.appendMessage("assistant", "Browser voice input is unavailable here — please type your question or click a prompt chip.");
         return;
       }
-      const aiResponse = await this.queryGeminiAPI(userText);
-      this.processAIResponse(aiResponse);
-    } catch (error) {
-      console.warn("Gemini API call fallback:", error);
-      const fallbackResponse = this.generateOfflineFallback(userText);
-      this.processAIResponse(fallbackResponse);
-    }
-  }
-
-  async queryGeminiAPI(userText) {
-    this.conversationHistory.push({ role: "user", parts: [{ text: userText }] });
-
-    const requestBody = {
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: `${GEMINI_SYSTEM_PROMPT}\n\nUser Question: ${userText}` }]
-        }
-      ],
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 250
-      }
-    };
-
-    const res = await fetch(GEMINI_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody)
-    });
-
-    if (!res.ok) {
-      throw new Error(`API response HTTP status ${res.status}`);
-    }
-
-    const data = await res.json();
-    const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text || "I am Ghulam Ghaus's Voice AI. How can I assist you with his portfolio or scheduling?";
-    return candidateText;
-  }
-
-  processAIResponse(rawText) {
-    let cleanText = rawText;
-
-    // Check for Action Tags
-    if (rawText.includes("[ACTION:BOOK_MEETING]")) {
-      cleanText = cleanText.replace("[ACTION:BOOK_MEETING]", "").trim();
-      this.openBookingModal();
-    }
-
-    const navMatch = rawText.match(/\[ACTION:NAVIGATE_SECTION:(#[a-zA-Z0-9_-]+)\]/);
-    if (navMatch) {
-      cleanText = cleanText.replace(navMatch[0], "").trim();
-      const targetId = navMatch[1];
-      const elem = document.querySelector(targetId);
-      if (elem) {
-        elem.scrollIntoView({ behavior: "smooth" });
+      try {
+        this.recognition.start();
+      } catch (_err) {
+        this.updateUI("idle");
       }
     }
 
-    this.appendMessage("assistant", cleanText);
-    this.speakText(cleanText);
-  }
-
-  speakText(text) {
-    if (!this.synthesis) return;
-
-    if (this.synthesis.speaking) {
-      this.synthesis.cancel();
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    utterance.lang = "en-US";
-
-    // Find a clear voice if available
-    const voices = this.synthesis.getVoices();
-    const preferredVoice = voices.find(v => v.lang.startsWith("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Samantha")));
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
-
-    utterance.onstart = () => {
-      this.isSpeaking = true;
-      this.updateUI("speaking");
-    };
-
-    utterance.onend = () => {
-      this.isSpeaking = false;
+    stopListening() {
+      if (this.recognition) this.recognition.stop();
+      this.isListening = false;
       this.updateUI("idle");
-    };
-
-    utterance.onerror = () => {
-      this.isSpeaking = false;
-      this.updateUI("idle");
-    };
-
-    this.synthesis.speak(utterance);
-  }
-
-  generateOfflineFallback(query) {
-    const q = query.toLowerCase();
-    if (q.includes("project") || q.includes("work")) {
-      return "Ghulam Ghaus has developed Voice Intake Systems, Real-Time AI Agent Engines, and Microservices Suites. [ACTION:NAVIGATE_SECTION:#portfolio]";
-    } else if (q.includes("skill") || q.includes("tech") || q.includes("stack")) {
-      return "He specializes in Node.js, TypeScript, NestJS, Python, FastAPI, Voice AI with Twilio and Deepgram, PostgreSQL, and AWS. [ACTION:NAVIGATE_SECTION:#skills]";
-    } else if (q.includes("contact") || q.includes("email") || q.includes("hire")) {
-      return "You can reach Ghulam Ghaus at ghulamghaus266@gmail.com or hire him on Upwork, Fiverr, and LinkedIn! [ACTION:NAVIGATE_SECTION:#contact]";
-    } else {
-      return `Ghulam Ghaus is a Software Engineer specializing in low-latency Voice AI, Node.js, and Full-Stack Systems. Feel free to explore his portfolio or book a meeting!`;
-    }
-  }
-
-  appendMessage(sender, text) {
-    if (!this.transcriptContainer) return;
-
-    const msgDiv = document.createElement("div");
-    msgDiv.className = `chat-message ${sender}-message mb-3 p-3 rounded-3`;
-
-    if (sender === "user") {
-      msgDiv.innerHTML = `<div class="d-flex align-items-center justify-content-end text-end"><span class="badge bg-secondary mb-1">You</span></div><div>${escapeHtml(text)}</div>`;
-    } else {
-      msgDiv.innerHTML = `<div class="d-flex align-items-center mb-1"><i class="bi bi-robot text-cyan-glow me-2"></i><strong class="text-cyan-glow">Ghulam Ghaus AI</strong></div><div>${escapeHtml(text)}</div>`;
     }
 
-    this.transcriptContainer.appendChild(msgDiv);
-    this.transcriptContainer.scrollTop = this.transcriptContainer.scrollHeight;
-  }
-
-  openBookingModal() {
-    if (this.bookingModal) {
-      const modal = new bootstrap.Modal(this.bookingModal);
-      modal.show();
-    }
-  }
-
-  processCalendarBooking() {
-    const name = document.getElementById("booking-name")?.value || "Guest";
-    const email = document.getElementById("booking-email")?.value || "";
-    const datetimeVal = document.getElementById("booking-datetime")?.value;
-    const topic = document.getElementById("booking-topic")?.value || "Portfolio Discussion & Hiring";
-
-    if (!datetimeVal) {
-      alert("Please select a date and time for the meeting.");
-      return;
+    openDrawer() {
+      if (!this.drawer) return;
+      this.drawer.classList.add("active");
+      this.drawer.setAttribute("aria-hidden", "false");
     }
 
-    const startDate = new Date(datetimeVal);
-    const endDate = new Date(startDate.getTime() + 30 * 60 * 1000); // 30 mins duration
+    closeDrawer() {
+      if (!this.drawer) return;
+      this.drawer.classList.remove("active");
+      this.drawer.setAttribute("aria-hidden", "true");
+    }
 
-    const formatDateForCal = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
+    updateUI(state) {
+      if (!this.statusText || !this.visualizer || !this.micBtn) return;
 
-    const startStr = formatDateForCal(startDate);
-    const endStr = formatDateForCal(endDate);
+      if (state === "listening") {
+        this.statusText.textContent = "Listening... speak now";
+        this.visualizer.classList.add("active-listening");
+        this.micBtn.classList.add("active-mic");
+      } else {
+        this.statusText.textContent = "100% Grounded on Verified CV";
+        this.visualizer.classList.remove("active-listening");
+        this.micBtn.classList.remove("active-mic");
+      }
+    }
 
-    // 1. Google Calendar URL
-    const googleCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Meeting with Ghulam Ghaus - " + topic)}&dates=${startStr}/${endStr}&details=${encodeURIComponent(`Client Name: ${name}\nEmail: ${email}\nTopic: ${topic}`)}&add=${encodeURIComponent("ghulamghaus266@gmail.com")}`;
+    handleQuery(userText) {
+      if (!userText || !userText.trim()) return;
+      this.appendMessage("user", userText);
 
-    // 2. Generate downloadable .ics iCalendar file
-    const icsData = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//Ghulam Ghaus Portfolio Voice AI//EN",
-      "BEGIN:VEVENT",
-      `SUMMARY:Meeting with Ghulam Ghaus (${topic})`,
-      `DESCRIPTION:Client Name: ${name}\\nEmail: ${email}\\nTopic: ${topic}`,
-      `DTSTART:${startStr}`,
-      `DTEND:${endStr}`,
-      "LOCATION:Google Meet / Remote Online",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "END:VCALENDAR"
-    ].join("\r\n");
+      const { text, section, openCalendar } = this.answerGrounded(userText);
+      this.appendMessage("assistant", text);
 
-    const blob = new Blob([icsData], { type: "text/calendar;charset=utf-8" });
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.setAttribute("download", `meeting-with-ghulam-ghaus.ics`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      if (section) {
+        const elem = document.querySelector(section);
+        if (elem) elem.scrollIntoView({ behavior: "smooth" });
+      }
+      if (openCalendar) {
+        this.openBookingModal();
+      }
+      if (this.audioEnabled) {
+        this.speakText(text);
+      }
+    }
 
-    // 3. Dispatch Email Notification to ghulamghaus266@gmail.com
-    this.sendBookingEmailNotification(name, email, startDate.toLocaleString(), topic);
+    answerGrounded(query) {
+      const q = query.toLowerCase();
 
-    // Open Google Calendar link in new tab
-    window.open(googleCalUrl, "_blank");
+      if (q.includes("book") || q.includes("meeting") || q.includes("schedule") || q.includes("call")) {
+        return {
+          text: "Opening the 15-minute call booking form now so you can generate an instant Google Calendar invite and .ics file.",
+          openCalendar: true
+        };
+      }
 
-    // Close modal
-    const modalElem = bootstrap.Modal.getInstance(this.bookingModal);
-    if (modalElem) modalElem.hide();
+      if (q.includes("rails") || q.includes("ruby") || q.includes("sidekiq") || q.includes("billing")) {
+        return {
+          text: "Yes — Ghulam has production Ruby on Rails experience at HiveWorx (Aug 2022–Aug 2024) and SOFTOO Technologies (Sep 2024–Jun 2025), building multi-tenant SaaS APIs, ActiveRecord models, Sidekiq/Redis background jobs, Devise/CanCanCan RBAC, ActionCable real-time events, Stripe recurring billing webhooks, and RSpec suites.",
+          section: "#resume"
+        };
+      }
 
-    // Confirm to user via Voice & Chat
-    const confirmMsg = `Thank you ${name}! I have generated your .ics calendar invite, sent an email notification to ghulamghaus266@gmail.com, and opened Google Calendar to confirm the booking for ${startDate.toLocaleString()}!`;
-    this.appendMessage("assistant", confirmMsg);
-    this.speakText(confirmMsg);
-  }
+      if (q.includes("jobagent") || q.includes("job-agent") || q.includes("rag") || q.includes("langgraph") || q.includes("freeswitch")) {
+        return {
+          text: "JobAgent AI (github.com/Ghulam-Ghaus/job-agent) is his open-source flagship built with NestJS 12, Next.js 16, PostgreSQL + pgvector (768-dim cosine RAG >= 0.55 with 'Unknown' fallback), LangGraph (7 typed Zod tools + SSE streaming), FreeSWITCH SIP/ESL/RTP telephony (<350ms), BullMQ queues, a Chrome Clipper extension, and human-in-the-loop ApplyPack approval gates.",
+          section: "#portfolio"
+        };
+      }
 
-  async sendBookingEmailNotification(name, email, datetimeStr, topic) {
-    try {
-      const recipient = "ghulamghaus266@gmail.com";
-      const payload = {
-        from: "Portfolio Calendar Booking <onboarding@resend.dev>",
-        to: [recipient],
-        subject: `[Calendar Meeting Request] ${name} - ${datetimeStr}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc; border-radius: 8px;">
-            <h2 style="color: #00f2fe; border-bottom: 2px solid #00f2fe; padding-bottom: 10px;">📅 New Calendar Meeting Booking</h2>
-            <p><strong>Client Name:</strong> ${name}</p>
-            <p><strong>Client Email:</strong> ${email}</p>
-            <p><strong>Requested Date & Time:</strong> ${datetimeStr}</p>
-            <p><strong>Topic / Discussion:</strong> ${topic}</p>
-            <div style="background-color: #1e293b; padding: 15px; border-radius: 6px; margin-top: 15px;">
-              <p style="margin: 0; color: #38bdf8;">Calendar invite (.ics) generated & Google Calendar link opened for visitor.</p>
-            </div>
-            <p style="font-size: 12px; color: #94a3b8; margin-top: 20px;">Sent via Ghulam Ghaus AI Voice Assistant Calendar Engine</p>
-          </div>
-        `
+      if (q.includes("desktop") || q.includes("mobile") || q.includes("electron") || q.includes("flutter") || q.includes("react native") || q.includes("pos")) {
+        return {
+          text: "Beyond backend and web platforms, he has built offline-first desktop ERP/POS software (Bakery POS Desktop ERP using Electron.js, React 19, NestJS, and SQLite WAL) as well as cross-platform iOS & Android mobile apps using React Native, Flutter, Expo, and Firebase.",
+          section: "#portfolio"
+        };
+      }
+
+      if (q.includes("voice") || q.includes("twilio") || q.includes("whisper") || q.includes("cartesia") || q.includes("deepgram") || q.includes("intakely")) {
+        return {
+          text: "At Intakely AI (Jul 2025–Aug 2026) and in Haider Voice AI, he engineered sub-second real-time voice platforms using Python, Node.js, WebSockets, Twilio Media Streams, Whisper/Deepgram STT, Cartesia TTS, conversational barge-in handling, and Supabase/Docker.",
+          section: "#portfolio"
+        };
+      }
+
+      if (q.includes("relocat") || q.includes("visa") || q.includes("notice") || q.includes("remote") || q.includes("saudi") || q.includes("uae") || q.includes("available")) {
+        return {
+          text: "Ghulam is available immediately (0-day notice) for full-time remote roles worldwide (UTC+5 with EU/UK/US overlap) or on-site relocation (Saudi Arabia, UAE, Europe, UK, and global). Experience letters (including HiveWorx's formal recommendation), degree verifications, and Saudi/UAE attested documents are ready on request.",
+          section: "#certifications"
+        };
+      }
+
+      if (q.includes("educat") || q.includes("degree") || q.includes("cgpa") || q.includes("universit") || q.includes("blockchain")) {
+        return {
+          text: PORTFOLIO_KNOWLEDGE.education,
+          section: "#certifications"
+        };
+      }
+
+      if (q.includes("project") || q.includes("work") || q.includes("15") || q.includes("hospital") || q.includes("arenyxa") || q.includes("esports")) {
+        return {
+          text: "He has shipped 15+ systems spanning JobAgent AI, Real-Time Voice Intake, Haider Voice AI, Bakery POS Desktop ERP, React Native/Flutter Mobile Apps, Ruby on Rails SaaS Billing API, Virtual Hospital System (Saudi Client), NutriCare Clinical SaaS, Arenyxa Esports, Enterprise SSO, HERO, and CSD Hire Purchase.",
+          section: "#portfolio"
+        };
+      }
+
+      if (q.includes("skill") || q.includes("stack") || q.includes("tech") || q.includes("aws") || q.includes("node") || q.includes("python")) {
+        return {
+          text: "Core stack: Node.js, Ruby on Rails, Express.js, NestJS, FastAPI, TypeScript, Python, React/Next.js, Electron, React Native, Flutter, PostgreSQL/pgvector, Redis, Sidekiq, BullMQ, AWS (Lambda, API Gateway, S3, Cognito), Docker, OAuth2/JWT/RBAC, LangGraph, and Voice AI.",
+          section: "#skills"
+        };
+      }
+
+      if (q.includes("contact") || q.includes("email") || q.includes("phone") || q.includes("whatsapp") || q.includes("hire")) {
+        return {
+          text: `Reach Ghulam directly at ${PORTFOLIO_KNOWLEDGE.email} or WhatsApp ${PORTFOLIO_KNOWLEDGE.whatsapp}. LinkedIn and GitHub links are in the Contact section.`,
+          section: "#contact"
+        };
+      }
+
+      return {
+        text: "Ghulam Ghaus is a Software Engineer with 4+ years building 15+ production web, desktop, mobile, SaaS, and Voice/Agentic AI systems using Node.js, Ruby on Rails, Python, TypeScript, and React/Next.js. Ask about Rails, JobAgent AI, Desktop/Mobile, or Relocation!"
       };
+    }
 
-      if (window.RESEND_API_KEY) {
-        await fetch("https://corsproxy.io/?https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${window.RESEND_API_KEY}`
-          },
-          body: JSON.stringify(payload)
-        }).catch(err => console.warn("Booking email dispatch notice:", err));
+    speakText(text) {
+      if (!this.synthesis) return;
+      if (this.synthesis.speaking) this.synthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 1.0;
+      const voices = this.synthesis.getVoices();
+      const preferred = voices.find(
+        (v) => v.lang.startsWith("en") && (v.name.includes("Natural") || v.name.includes("Google"))
+      );
+      if (preferred) utterance.voice = preferred;
+      this.synthesis.speak(utterance);
+    }
+
+    appendMessage(sender, text) {
+      if (!this.transcriptContainer) return;
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `chat-message ${sender}-message`;
+      if (sender === "user") {
+        msgDiv.innerHTML = `<div class="chat-sender text-end">You</div><div>${escapeHtml(text)}</div>`;
+      } else {
+        msgDiv.innerHTML = `<div class="chat-sender"><i class="bi bi-shield-check me-1"></i> Grounded CV Assistant</div><div>${escapeHtml(text)}</div>`;
       }
-    } catch (e) {
-      console.warn("sendBookingEmailNotification error:", e);
+      this.transcriptContainer.appendChild(msgDiv);
+      this.transcriptContainer.scrollTop = this.transcriptContainer.scrollHeight;
+    }
+
+    openBookingModal() {
+      if (this.bookingModal && typeof bootstrap !== "undefined") {
+        bootstrap.Modal.getOrCreateInstance(this.bookingModal).show();
+      }
+    }
+
+    processCalendarBooking() {
+      const name = document.getElementById("booking-name")?.value.trim() || "Guest";
+      const email = document.getElementById("booking-email")?.value.trim() || "";
+      const datetimeVal = document.getElementById("booking-datetime")?.value;
+      const topic = document.getElementById("booking-topic")?.value.trim() || "Software Engineering Interview";
+
+      if (!datetimeVal) return;
+
+      const startDate = new Date(datetimeVal);
+      const endDate = new Date(startDate.getTime() + 30 * 60 * 1000);
+      const formatCal = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
+      const startStr = formatCal(startDate);
+      const endStr = formatCal(endDate);
+
+      const googleCalUrl =
+        `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+        `&text=${encodeURIComponent(`Intro Call: ${name} x Ghulam Ghaus (${topic})`)}` +
+        `&dates=${startStr}/${endStr}` +
+        `&details=${encodeURIComponent(`Recruiter / Client: ${name}\nEmail: ${email}\nTopic: ${topic}`)}` +
+        `&add=${encodeURIComponent(PORTFOLIO_KNOWLEDGE.email)}`;
+
+      const icsData = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Ghulam Ghaus Portfolio//EN",
+        "BEGIN:VEVENT",
+        `SUMMARY:Intro Call with Ghulam Ghaus (${topic})`,
+        `DESCRIPTION:Name: ${name}\\nEmail: ${email}\\nTopic: ${topic}`,
+        `DTSTART:${startStr}`,
+        `DTEND:${endStr}`,
+        "LOCATION:Online / Google Meet",
+        "STATUS:CONFIRMED",
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+
+      const blob = new Blob([icsData], { type: "text/calendar;charset=utf-8" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "call-with-ghulam-ghaus.ics");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      window.open(googleCalUrl, "_blank", "noopener");
+
+      if (typeof bootstrap !== "undefined" && this.bookingModal) {
+        bootstrap.Modal.getOrCreateInstance(this.bookingModal).hide();
+      }
+
+      this.openDrawer();
+      this.appendMessage(
+        "assistant",
+        `Calendar invite (.ics) downloaded and Google Calendar opened for ${startDate.toLocaleString()} with ${PORTFOLIO_KNOWLEDGE.email}.`
+      );
     }
   }
-}
 
-function escapeHtml(str) {
-  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
 
-// Initialize on DOM load
-document.addEventListener("DOMContentLoaded", () => {
-  window.voiceAssistant = new VoiceAssistantEngine();
-});
+  document.addEventListener("DOMContentLoaded", () => {
+    window.voiceAssistant = new GroundedAssistantEngine();
+  });
+})();
